@@ -2,5 +2,6 @@ import processing.core._
 
 object Bwatnwa extends App
 {
-  PApplet.main("Test")
+  val t = new Test2()
+  t.setVisible(true)
 }
