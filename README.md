@@ -10,3 +10,5 @@ This project is a raw binary data viewer/editor/dissector, mainly inspired by co
 - Hex + decoded display / edit
 - Big files support (larger than RAM)
 
+# Screenshots
+''Soon ...''
