@@ -11,6 +11,5 @@ This project is a raw binary data viewer/editor/dissector, mainly inspired by co
 - Big files support (larger than RAM)
 
 # Screenshots
-![alt text][logo]
 
 ![alt text](https://github.com/RandomReaper/bwatnwa/raw/master/src/main/resources/bwatnwa.png "Let's begin")
