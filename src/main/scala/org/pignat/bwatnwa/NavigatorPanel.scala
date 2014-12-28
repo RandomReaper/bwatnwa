@@ -1,38 +1,31 @@
 package org.pignat.bwatnwa
 
 import processing.core.PApplet
-import java.nio.MappedByteBuffer
 
-class NavigatorPanel extends Tmp {
+class NavigatorPanel extends PApplet with ByteArrayEater {
 
-  var data:MappedByteBuffer = null;
-  override def setData(b:MappedByteBuffer) : Unit = {
+  var data:Array[Byte] = null;
+  
+  override def setData(b:Array[Byte]) : Unit = {
     data = b
   }
   
   override def setup(): Unit = {
-    // original setup code here ...
-    size(800, 800)
-
-    // prevent thread from starving everything else
     noLoop()
   }
 
   override def draw(): Unit = {
     val sz = getSize
     loadPixels()
+    if (data == null) return
     (0 until pixels.length).foreach{
       x => 
-      pixels(x) = color(0, data.get(x), 0)
+      pixels(x) = color(0, data(x), 0)
     }
     
     updatePixels() 
   }
 
   override def mousePressed(): Unit = {
-    // do something based on mouse movement
-
-    // update the screen (run draw once)
-    redraw()
   }
 }

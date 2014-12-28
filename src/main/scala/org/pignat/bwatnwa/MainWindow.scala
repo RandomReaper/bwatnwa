@@ -1,16 +1,13 @@
 package org.pignat.bwatnwa
 
-import processing.core.PApplet
-import javax.swing.JFrame
 import java.awt.Dimension
-import javax.swing.JSplitPane
 import java.awt.event.WindowAdapter
 import java.awt.event.WindowEvent
-import java.io.File
-import java.io.FileInputStream
-import java.nio.channels.FileChannel.MapMode._
-import java.nio.file.Paths
+
 import org.pignat.bwatnwa.util.BinaryFileReader
+
+import javax.swing.JFrame
+import javax.swing.JSplitPane
 
 class MainWindow extends JFrame("BwatNwa") {
 
@@ -22,10 +19,13 @@ class MainWindow extends JFrame("BwatNwa") {
     x.setSize(400, 400)
     x.setMinimumSize(new Dimension(400, 400))
   }
+  
+  val n2 = new NavigatorPanel2
 
-  val splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, embed(0), embed(1))
+  val splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, n2, embed(0))
+  n2.setData(data)
   embed(0).setData(data)
-  splitPane.setDividerLocation(0.25)
+  splitPane.setDividerLocation(.5)
 
   add(splitPane)
   pack()
