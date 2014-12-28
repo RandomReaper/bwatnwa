@@ -12,6 +12,8 @@ object Utils {
     v |= v >> 8
     v |= v >> 16
     v = v + 1
+    if (v > n) return v/2
+     
     return v
   }
   

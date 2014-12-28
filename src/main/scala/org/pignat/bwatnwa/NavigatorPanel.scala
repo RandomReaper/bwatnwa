@@ -1,31 +1,34 @@
 package org.pignat.bwatnwa
 
-import processing.core.PApplet
+import java.awt.BorderLayout
+import javax.swing.JPanel
+import javax.swing.JLabel
+import java.awt.GridLayout
+import java.awt.Dimension
+import java.nio.MappedByteBuffer
 
-class NavigatorPanel extends PApplet with ByteArrayEater {
+class NavigatorPanel(b:ByteArrayEater) extends JPanel with ByteArrayEater {
 
   var data:Array[Byte] = null;
-  
+
   override def setData(b:Array[Byte]) : Unit = {
-    data = b
+    navigation.setData(b)
   }
   
-  override def setup(): Unit = {
-    noLoop()
-  }
-
-  override def draw(): Unit = {
-    val sz = getSize
-    loadPixels()
-    if (data == null) return
-    (0 until pixels.length).foreach{
-      x => 
-      pixels(x) = color(0, data(x), 0)
-    }
-    
-    updatePixels() 
-  }
-
-  override def mousePressed(): Unit = {
-  }
+  setLayout(new BorderLayout)
+  val sizeLabel = new JLabel("size")
+  add(sizeLabel, BorderLayout.PAGE_START)
+  
+  val p =  new JPanel
+  p.setLayout(new GridLayout(1,2))
+  val zoom = new Binary2dView
+  val navigation = new Binary2dViewSelect()
+  navigation.addDataEater(zoom)
+  navigation.addDataEater(b)
+  p.add(navigation)
+  p.add(zoom)  
+  add(p, BorderLayout.CENTER)
+  
+  setMinimumSize(new Dimension(64,64))
+  setPreferredSize(new Dimension(64,64))
 }

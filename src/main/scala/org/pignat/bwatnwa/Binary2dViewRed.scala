@@ -4,7 +4,7 @@ import org.pignat.bwatnwa.util.Utils
 
 import processing.core.PApplet
 
-class Binary2dView extends GraphicalView with ByteArrayEater {
+class Binary2dViewRed extends GraphicalView with ByteArrayEater {
   
   var data:Array[Byte] = null;
   
@@ -19,12 +19,12 @@ class Binary2dView extends GraphicalView with ByteArrayEater {
     
     val xwidth = Utils.round2power2(width)
     val t = Utils.scaleToSize(data, xwidth*height)
-    background(color(30,0,0))
+    background(color(127))
     
     for (i <- 0 until t.length) {
       var x = i % xwidth
       var y = i / xwidth
-      set(x,y,color(0, t(i), 0))
+      set(x,y,color(t(i), 0, 0))
     }
     
     noLoop
