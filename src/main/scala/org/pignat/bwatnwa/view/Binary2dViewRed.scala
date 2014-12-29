@@ -1,8 +1,8 @@
-package org.pignat.bwatnwa
+package org.pignat.bwatnwa.view
 
 import org.pignat.bwatnwa.util.Utils
-
-import processing.core.PApplet
+import org.pignat.bwatnwa.GraphicalView
+import org.pignat.bwatnwa.ByteArrayEater
 
 class Binary2dViewRed extends GraphicalView with ByteArrayEater {
   
@@ -24,7 +24,7 @@ class Binary2dViewRed extends GraphicalView with ByteArrayEater {
     for (i <- 0 until t.length) {
       var x = i % xwidth
       var y = i / xwidth
-      set(x,y,color(t(i), 0, 0))
+      set(x,y,color(t(i) & 0xff, 0, 0))
     }
     
     noLoop

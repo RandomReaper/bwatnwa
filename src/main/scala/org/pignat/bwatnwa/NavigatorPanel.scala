@@ -6,11 +6,18 @@ import javax.swing.JLabel
 import java.awt.GridLayout
 import java.awt.Dimension
 import java.nio.MappedByteBuffer
+import org.pignat.bwatnwa.view.Binary2dViewSelect
+import org.pignat.bwatnwa.view.Binary2dView
 
-class NavigatorPanel(b:ByteArrayEater) extends JPanel with ByteArrayEater {
+class NavigatorPanel(b:ByteArrayEater) extends JPanel with ByteArrayEater with PointListener {
 
   var data:Array[Byte] = null;
 
+  def point(s:Int) = {
+    zoom.point(s)
+    navigation.point(s)
+  }
+  
   override def setData(b:Array[Byte]) : Unit = {
     navigation.setData(b)
   }
@@ -21,8 +28,8 @@ class NavigatorPanel(b:ByteArrayEater) extends JPanel with ByteArrayEater {
   
   val p =  new JPanel
   p.setLayout(new GridLayout(1,2))
-  val zoom = new Binary2dView
-  val navigation = new Binary2dViewSelect()
+  val zoom = new Binary2dView(this)
+  val navigation = new Binary2dViewSelect
   navigation.addDataEater(zoom)
   navigation.addDataEater(b)
   p.add(navigation)

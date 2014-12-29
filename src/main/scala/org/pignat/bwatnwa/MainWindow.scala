@@ -14,11 +14,16 @@ import javax.swing.JButton
 import javax.swing.JDialog
 import java.awt.event.ActionListener
 import java.awt.event.ActionEvent
+import org.pignat.bwatnwa.view._
 
-class MainWindow extends JFrame("BwatNwa") with ByteArrayEater {
+class MainWindow extends JFrame("BwatNwa") with ByteArrayEater with PointListener {
 
   var data:Array[Byte] = null
 
+  def point(s:Int) = {
+    navigator.point(s)
+  }
+  
   def changeDisplay(g:GraphicalView with ByteArrayEater) : Unit = {
     val d = display.getSize 
     remove(display)
@@ -38,7 +43,7 @@ class MainWindow extends JFrame("BwatNwa") with ByteArrayEater {
     display.setData(data)
   }
   
-  var display:GraphicalView with ByteArrayEater = new Binary2dView
+  var display:GraphicalView with ByteArrayEater = new Binary2dView(this)
   
   val navigator = new NavigatorPanel(this)
   navigator.setPreferredSize(new Dimension(128, 512))
@@ -49,11 +54,11 @@ class MainWindow extends JFrame("BwatNwa") with ByteArrayEater {
   add(navigator, BorderLayout.WEST)
   display.setPreferredSize(new Dimension(512, 512))
   add(display, BorderLayout.CENTER)
-  changeDisplay(new Binary2dViewRed)
+  changeDisplay(new Digraph())
   val buttonPanel = new JPanel
   buttonPanel.setLayout(new GridLayout(10,1))
   
-  val buttons = 0 to 2 map (x=>new JButton(x.toString))
+  val buttons = 0 to 4 map (x=>new JButton(x.toString))
   buttons(0).addActionListener(new ActionListener()
   {
     def actionPerformed(e:ActionEvent ) = {
@@ -63,13 +68,25 @@ class MainWindow extends JFrame("BwatNwa") with ByteArrayEater {
   buttons(1).addActionListener(new ActionListener()
   {
     def actionPerformed(e:ActionEvent ) = {
-      changeDisplay(new Binary2dView)
+      changeDisplay(new Binary2dView(MainWindow.this))
     }
   });
   buttons(2).addActionListener(new ActionListener()
   {
     def actionPerformed(e:ActionEvent ) = {
       changeDisplay(new Binary2dViewRed)
+    }
+  });
+  buttons(3).addActionListener(new ActionListener()
+  {
+    def actionPerformed(e:ActionEvent ) = {
+      changeDisplay(new Binary2dViewSquare(MainWindow.this))
+    }
+  });
+  buttons(4).addActionListener(new ActionListener()
+  {
+    def actionPerformed(e:ActionEvent ) = {
+      changeDisplay(new Digraph())
     }
   });
   buttons.foreach(buttonPanel.add(_))

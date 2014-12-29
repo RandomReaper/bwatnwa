@@ -11,5 +11,7 @@ This project is a raw binary data viewer/editor/dissector, mainly inspired by co
 - Big files support (larger than RAM)
 
 # Screenshots
-
 ![alt text](https://github.com/RandomReaper/bwatnwa/raw/master/src/main/resources/bwatnwa.png "Let's begin")
+![alt text](https://github.com/RandomReaper/bwatnwa/raw/master/src/main/resources/digraph_bash.png "digraph bash linux AMD64 executable")
+![alt text](https://github.com/RandomReaper/bwatnwa/raw/master/src/main/resources/digraph_ascii.png "digraph ascii text")
+
