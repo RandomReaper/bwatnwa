@@ -125,7 +125,6 @@ object Utils {
     {
       return (1, Math.max((x+target._1-1)/target._1, (y+target._2-1)/target._2))
     }
-       
   }
   
   def scaleToSize(b:Array[Byte], target:Int) : Array[Byte] = {

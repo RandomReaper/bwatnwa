@@ -1,6 +1,5 @@
 object test {
-  println("Welcome to the Scala worksheet")       //> Welcome to the Scala worksheet
-  val a = 255.toByte                              //> a  : Byte = -1
-  val b = a & 0xff                                //> b  : Int = 255
-  println(0xff.toInt)                             //> 255
+	(0 to 10).map(_.toByte).map(x=> f"$x%02x")//> res0: scala.collection.immutable.IndexedSeq[String] = Vector(00, 01, 02, 03, 
+                                                  //| 04, 05, 06, 07, 08, 09, 0a)
+
 }

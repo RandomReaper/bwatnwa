@@ -54,11 +54,11 @@ class MainWindow extends JFrame("BwatNwa") with ByteArrayEater with PointListene
   add(navigator, BorderLayout.WEST)
   display.setPreferredSize(new Dimension(512, 512))
   add(display, BorderLayout.CENTER)
-  changeDisplay(new Digraph())
+  changeDisplay(new Hexdump())
   val buttonPanel = new JPanel
   buttonPanel.setLayout(new GridLayout(10,1))
   
-  val buttons = 0 to 4 map (x=>new JButton(x.toString))
+  val buttons = 0 to 5 map (x=>new JButton(x.toString))
   buttons(0).addActionListener(new ActionListener()
   {
     def actionPerformed(e:ActionEvent ) = {
@@ -87,6 +87,12 @@ class MainWindow extends JFrame("BwatNwa") with ByteArrayEater with PointListene
   {
     def actionPerformed(e:ActionEvent ) = {
       changeDisplay(new Digraph())
+    }
+  });
+  buttons(5).addActionListener(new ActionListener()
+  {
+    def actionPerformed(e:ActionEvent ) = {
+      changeDisplay(new Hexdump())
     }
   });
   buttons.foreach(buttonPanel.add(_))
