@@ -28,10 +28,55 @@ class Hexdump extends GraphicalView with ByteArrayEater with PointListener {
   override def draw(): Unit = {
     
     if (data == null) return
-    val s = data.slice(0, 16).map(x=>f"$x%02x")
-    val a = data.slice(0, 16).map(x=>f"$x%c")
-    val t = s.mkString(" ") + " | " + a.mkString("") + " | "
-    println(s"t=$t")
+    
+    val margin = 5
+    val textHeight = 12
+    val lineWidth = 16
+    
+    val dataSize = (height - 2 * margin / textHeight) * lineWidth
+    val ldata = data.slice(0, dataSize)
+    
+    background(50)
+    fill(200)
+    textSize(textHeight)
+
+    for (i <- 0 until height - 2 * margin / textHeight) {
+      var t = ""
+      for (j <- 0 until lineWidth ) {
+        if (i*lineWidth+j < data.length) {
+          t += f"${data(i*lineWidth+j)}%02x "    
+        }
+        else {
+          t += "   "
+        }
+      }
+      
+      t += "| "
+      
+      for (j <- 0 until lineWidth ) {
+        if (i*lineWidth+j < data.length) {
+          val c = data(i*lineWidth+j) & 0xff
+          if (c >= ' ' && c <= '~')
+          {
+            t += f"$c%c"
+          }
+          else
+          {
+            t += "."
+          }
+              
+        }
+        else {
+          t += " "
+        }
+      }
+      t += " |"
+      
+      // Not a fixed width font, take this ;) 
+      for (k <- 0 until t.length) {
+        text(t(k), margin+k*textHeight*3/5, margin+i*textHeight)
+      }
+    }
     
     noLoop
   }

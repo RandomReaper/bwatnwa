@@ -63,7 +63,7 @@ object Utils {
       var sum = 0
       for (j <- 0 until div)
       {
-        sum += b(i*div+j)
+        sum += b(i*div+j) & 0xff
       }
       r(i) = (sum/div).toByte
     }
@@ -83,7 +83,7 @@ object Utils {
       var sum = 0
       for (j <- 0 until div)
       {
-        sum += b(x*div+j)(y*div+j)
+        sum += b(x*div+j)(y*div+j) & 0xff
       }
       r(x)(y) = (sum/div).toByte
     }
