@@ -29,12 +29,8 @@ class Binary2dView(pl:PointListener) extends GraphicalView with ByteArrayEater w
     val t = Utils.scaleToSize(data, xwidth*height)
     background(color(30,0,0))
     
-    for (i <- 0 until t.length) {
-      var x = i % xwidth
-      var y = i / xwidth
-      set(x,y,color(0, t(i) & 0xff, 0))
-    }
-    
+    draw(data, color(0,1,0))
+        
     if (point != -1)
     {
       var (scale_mul, scale_div) = Utils.scaleFactor(data, xwidth*height)

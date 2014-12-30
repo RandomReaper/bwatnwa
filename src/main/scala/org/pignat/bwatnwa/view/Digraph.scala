@@ -37,13 +37,16 @@ class Digraph extends GraphicalView with ByteArrayEater with PointListener {
 
     val max = digraph.flatten.max
     val d = digraph.flatten.map(x => (Math.log(x)/Math.log(max) * 255).toByte)
-    
+    val x = digraph.map(_.map(x => (Math.log(x)/Math.log(max) * 255).toByte))
+    draw(x, color(1,1,1))
+    /*
     val ll = 256
     for (i <- 0 until d.length) {
       var x = i % ll
       var y = i / ll
       set(x,y,color(color(d(i) & 0xff)))
     }
+    */
     
     noLoop
   }

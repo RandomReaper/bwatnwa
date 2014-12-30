@@ -1,6 +1,7 @@
 package org.pignat.bwatnwa.util
 
 import java.nio.ByteBuffer
+import org.pignat.bwatnwa.GraphicalView
 
 object Utils {
   def round2power2(n: Int): Int = {
@@ -17,32 +18,85 @@ object Utils {
     return v
   }
   
-  def scale(b:Array[Byte], mul: Int, div: Int) : Array[Byte] = {
-    val big = Array.fill[Byte](b.length*mul)(0)
-    val result = Array.fill[Byte](b.length*mul/div)(0)
+  def scaleMul(b:Array[Byte], mul:Int) : Array[Byte] = {
+    require(mul >= 1)
     
-    if (div == 1 && mul == 1) {
-      return b
-    }
+    if (mul == 1) return b
+    
+    val r = Array.ofDim[Byte](b.length*mul)
     
     for (i <- 0 until b.length) {
       for (j <- 0 until mul) {
-        big(i*mul+j) = b(i)
+        r(i*mul+j) = b(i)
       }  
     }
+    
+    return r
+  }
+  
+  def scaleMul(b:Array[Array[Byte]], mul:Int) : Array[Array[Byte]] = {
+    require(mul >= 1)
+    
+    if (mul == 1) return b
+    
+    val r = Array.ofDim[Byte](b.length*mul, b(0).length*mul)
+    
+    for (x <- 0 until b.length; y <- 0 until b(0).length)
+    {
+      for (j <- 0 until mul) {
+        r(x*mul+j)(y*mul+j) = b(x)(y)
+      }
+    }
+    
+    return r
+  }
 
+  def scaleDiv(b:Array[Byte], div:Int) : Array[Byte] = {
+    require(div >= 1)
+    
+    if (div == 1) return b
+    
+    val r = Array.ofDim[Byte](b.length/div)
 
-    for (i <- 0 until result.length)
+    for (i <- 0 until r.length)
     {
       var sum = 0
       for (j <- 0 until div)
       {
-        sum += big(i*div+j)
+        sum += b(i*div+j)
       }
-      result(i) = (sum/div).toByte
+      r(i) = (sum/div).toByte
     }
     
-    return result
+    return r
+  }
+  
+  def scaleDiv(b:Array[Array[Byte]], div:Int) : Array[Array[Byte]] = {
+    require(div >= 1)
+    
+    if (div == 1) return b
+    
+    val r = Array.ofDim[Byte](b.length/div, b(0).length/div)
+
+    for (x <- 0 until r.length; y <- 0 until r(0).length)
+    {
+      var sum = 0
+      for (j <- 0 until div)
+      {
+        sum += b(x*div+j)(y*div+j)
+      }
+      r(x)(y) = (sum/div).toByte
+    }
+    
+    return r
+  }
+
+  def scale(b:Array[Byte], muldiv:(Int, Int)) : Array[Byte] = {
+    return scaleDiv(scaleMul(b,muldiv._1),muldiv._2)
+  }
+ 
+  def scale(b:Array[Array[Byte]], muldiv:(Int, Int)) : Array[Array[Byte]] = {
+    return scaleDiv(scaleMul(b,muldiv._1),muldiv._2)
   }
   
   def scaleFactor(b:Array[Byte], target:Int) : (Int, Int) = {
@@ -56,9 +110,32 @@ object Utils {
     }   
   }
   
+  def scaleFactor(b:Array[Array[Byte]], target:(Int,Int)) : (Int, Int) = {
+    val x = b.length
+    val y = b(0).length
+    
+    val scale_x = target._1.toDouble/x 
+    val scale_y = target._2.toDouble/y  
+  
+    if (scale_x >= 1 && scale_y >= 1)
+    {
+      return (Math.min(target._1/x, target._2/y), 1)
+    }
+    else
+    {
+      return (1, Math.max((x+target._1-1)/target._1, (y+target._2-1)/target._2))
+    }
+       
+  }
+  
   def scaleToSize(b:Array[Byte], target:Int) : Array[Byte] = {
     val x = scaleFactor(b, target)
-    return scale(b, x._1, x._2)
+    return scale(b, x)
+  }
+  
+  def scaleToSize(b:Array[Array[Byte]], target:(Int,Int)) : Array[Array[Byte]]= {
+    val x = scaleFactor(b, target)
+    return scale(b, x)
   }
   
   //rotate/flip a quadrant appropriately
