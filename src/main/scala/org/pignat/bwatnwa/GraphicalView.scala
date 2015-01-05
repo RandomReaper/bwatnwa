@@ -11,20 +11,36 @@ class GraphicalView extends PApplet {
   def draw(b:Array[Byte], color:Int) {
     val xwidth = Utils.round2power2(width)
     val d = Utils.scaleToSize(b, xwidth * height)
-    for (i <- 0 until d.length)
-    {
-      val x = i % width
-      val y = i / width
-      set(x,y, color*(d(i) & 0xff))
+    loadPixels
+    if (width == xwidth) {
+      for (i <- 0 until d.length)
+      {
+        pixels(i) = color*(d(i) & 0xff)
+      }
     }
+    else
+    {
+      for (i <- 0 until d.length)
+      {
+        val x = i % xwidth
+        val y = i / xwidth
+        pixels(y*width+x) = color*(d(i) & 0xff)
+      }      
+    }
+    
+    updatePixels
   }
 
   def draw(b:Array[Array[Byte]], color:Int) {
     val d = Utils.scaleToSize(b, (width, height))
     
+    loadPixels
+    
     for (x <- 0 until d.length; y <- 0 until d(0).length)
     {
-      set(x,y, color*(d(x)(y) & 0xff))
+      pixels(y*width+x) = color*(d(x)(y) & 0xff)
     }
+    
+    updatePixels
   }
 }

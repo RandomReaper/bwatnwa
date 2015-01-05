@@ -1,5 +1,12 @@
 object test {
-	(0 to 10).map(_.toByte).map(x=> f"$x%02x")//> res0: scala.collection.immutable.IndexedSeq[String] = Vector(00, 01, 02, 03, 
-                                                  //| 04, 05, 06, 07, 08, 09, 0a)
-
+	println("hello")                          //> hello
+	
+	val a = Array.fill(12)(10)                //> a  : Array[Int] = Array(10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10)
+	println(a.mkString(" "))                  //> 10 10 10 10 10 10 10 10 10 10 10 10
+	def toto(b:Array[Int]) = {
+		b(0) = 33
+	}                                         //> toto: (b: Array[Int])Unit
+	
+	toto(a)
+	println(a.mkString(" "))                  //> 33 10 10 10 10 10 10 10 10 10 10 10
 }

@@ -1,6 +1,3 @@
-/**
- * conti's digraph
- */
 package org.pignat.bwatnwa.view
 
 import org.pignat.bwatnwa.util.Utils

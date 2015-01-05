@@ -15,10 +15,12 @@ import javax.swing.JDialog
 import java.awt.event.ActionListener
 import java.awt.event.ActionEvent
 import org.pignat.bwatnwa.view._
+import org.pignat.bwatnwa.transform._
 
 class MainWindow extends JFrame("BwatNwa") with ByteArrayEater with PointListener {
 
   var data:Array[Byte] = null
+  val ndisplay = new TransformView
 
   def point(s:Int) = {
     navigator.point(s)
@@ -41,6 +43,7 @@ class MainWindow extends JFrame("BwatNwa") with ByteArrayEater with PointListene
   override def setData(b:Array[Byte]) : Unit = {
     data = b
     display.setData(data)
+    ndisplay.setData(data)
   }
   
   var display:GraphicalView with ByteArrayEater = new Binary2dView(this)
@@ -54,11 +57,12 @@ class MainWindow extends JFrame("BwatNwa") with ByteArrayEater with PointListene
   add(navigator, BorderLayout.WEST)
   display.setPreferredSize(new Dimension(512, 512))
   add(display, BorderLayout.CENTER)
-  changeDisplay(new Hexdump())
+  ndisplay.set(new TransformBin, new ViewBinGreen, data)
+  changeDisplay(ndisplay)
   val buttonPanel = new JPanel
   buttonPanel.setLayout(new GridLayout(10,1))
   
-  val buttons = 0 to 5 map (x=>new JButton(x.toString))
+  val buttons = 0 to 9 map (x=>new JButton(x.toString))
   buttons(0).addActionListener(new ActionListener()
   {
     def actionPerformed(e:ActionEvent ) = {
@@ -93,6 +97,30 @@ class MainWindow extends JFrame("BwatNwa") with ByteArrayEater with PointListene
   {
     def actionPerformed(e:ActionEvent ) = {
       changeDisplay(new Hexdump())
+    }
+  });
+  buttons(6).addActionListener(new ActionListener()
+  {
+    def actionPerformed(e:ActionEvent ) = {
+      changeDisplay(new AsyncTest())
+    }
+  });
+  buttons(7).addActionListener(new ActionListener()
+  {
+    def actionPerformed(e:ActionEvent ) = {
+      changeDisplay(new TestTransformView())
+    }
+  });
+  buttons(8).addActionListener(new ActionListener()
+  {
+    def actionPerformed(e:ActionEvent ) = {
+      ndisplay.set(new TransformBin, new ViewBinGreen, data)
+    }
+  });
+  buttons(9).addActionListener(new ActionListener()
+  {
+    def actionPerformed(e:ActionEvent ) = {
+      ndisplay.set(new TransformBin, new ViewBinRed, data)
     }
   });
   buttons.foreach(buttonPanel.add(_))
