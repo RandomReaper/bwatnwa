@@ -11,7 +11,6 @@ class Binary2dViewSelect extends GraphicalView with ByteArrayEater with PointLis
   
   def point(s:Int) = {
     point = s
-    redraw
     loop
   }
   
@@ -23,7 +22,6 @@ class Binary2dViewSelect extends GraphicalView with ByteArrayEater with PointLis
   override def setData(b:Array[Byte]) : Unit = {
     data = b
     select = (0, data.length)
-    redraw
     loop
     dataEaters.foreach(_.setData(data))
   }
@@ -109,7 +107,6 @@ class Binary2dViewSelect extends GraphicalView with ByteArrayEater with PointLis
     
     dataEaters.foreach(_.setData(data.slice(select._1, select._2)))
     
-    redraw
     loop
   }
 

@@ -2,17 +2,18 @@ package org.pignat.bwatnwa
 
 import org.pignat.bwatnwa.util.Utils
 
-abstract class GraphicalViewTransform extends GraphicalView with TransformListener {
+abstract class GraphicalViewTransform(pl:PointListener) extends GraphicalView with TransformListener {
   
   override def setup(): Unit = {
     val s = getSize
-    size(512,512,processing.core.PConstants.P3D);
+    size(513,512,processing.core.PConstants.P3D);
     //frameRate(60)
   }
 
   def handle_resize(x:Int, y:Int) : Unit
   def handle_update() : Unit
-  
+  def handle_point(x:Int, y:Int) : Int
+
   protected var m_width = width
   protected var m_height = height
   
@@ -27,4 +28,12 @@ abstract class GraphicalViewTransform extends GraphicalView with TransformListen
     
     handle_update()
   }
+
+  override def mousePressed() = {
+    pl.point(handle_point(Math.max(Math.min(mouseX, width), 0), Math.max(Math.min(mouseY, height), 0)))
+  }
+  
+  override def mouseDragged() = {
+    mousePressed()
+  }  
 }

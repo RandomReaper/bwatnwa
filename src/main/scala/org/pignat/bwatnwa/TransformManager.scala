@@ -9,96 +9,91 @@ class TransformManager(listener:TransformListener) {
   
   import States._
   
+  val masterLock = new Object
+  val stateLock = new Object
+  var transform:Transform = null
+  private var m_state = Idle
+  
   def t_started() : Unit =
   {
-    this.synchronized
+    stateLock.synchronized
     {
-      require(m_state == Starting)
-      
+      //println(s"t_started m_state=$m_state")
+      require(m_state == Starting || m_state == Stopping)
       m_state = Running
     }
   }
 
   def t_stopping() : Unit =
   {
-    this.synchronized
+    stateLock.synchronized
     {
-      require(m_state == Starting || m_state == Running | m_state ==Stopping)
-      
+      //println(s"t_stopping m_state=$m_state")
+      require(m_state == Starting || m_state == Running || m_state == Stopping)     
       m_state = Stopping
     }
   }
   
   def t_done() : Unit =
   {
-    this.synchronized
+    stateLock.synchronized
     {
-      require(m_state == Starting || m_state == Running || m_state == Stopping)
-      
+      //println(s"t_done m_state=$m_state")
+      require(m_state == Starting || m_state == Running || m_state == Stopping)    
       m_state = Idle
-      
       listener.TransformDone()
     }
   }
   
-  var transform:Transform = null
-  
   def start(t:Transform) {
-    this.synchronized
+    masterLock.synchronized
     {
-      m_state match
+      stateLock.synchronized
       {
-        case Idle =>
-
-        case Starting =>
-          while (m_state != Running) {
-            Thread.sleep(1)
-          }
-          transform.stop(this)
-          
-        case Running =>
-          transform.stop(this)
-          
-        case Stopping =>
-        case _ =>
+        //println(s"start m_state=$m_state")
+        m_state match
+        {
+          case Idle =>
+          case Starting | Running => transform.stop(this)
+          case Stopping =>
+          case _ =>          
+        }
       }
-    }      
-      
-    while (m_state != Idle) {
-      Thread.sleep(1)
+        
+      while (m_state != Idle) {
+        Thread.sleep(1)
+      }
+  
+      stateLock.synchronized
+      {
+        transform = t
+        m_state = Starting
+      }
+  
+      transform.start(this)
     }
-
-    this.synchronized
-    {
-      transform = t
-      m_state = Starting
-    }
-
-    transform.start(this)
   }
   
   def stop() : Unit =
   {
-    this.synchronized
+    masterLock.synchronized
     {
-      m_state match
+      stateLock.synchronized
       {
-        case Idle => return
-        case Starting | Running => transform.stop(this)
-        case Stopping =>
-        case _ =>
+        //println(s"stop m_state=$m_state")
+
+        m_state match
+        {
+          case Idle => return
+          case Starting | Running => transform.stop(this)
+          case Stopping =>
+          case _ =>
+        }
+      }
+
+      while (m_state != Idle) {
+        Thread.sleep(1)
       }
     }
-
-    while (m_state != Idle) {
-      Thread.sleep(1)
-    }  
-  
-    this.synchronized
-    {
-      m_state = Idle
-    }
   }
-  
-  private var m_state = Idle
 }

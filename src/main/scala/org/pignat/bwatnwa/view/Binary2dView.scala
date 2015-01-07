@@ -12,13 +12,11 @@ class Binary2dView(pl:PointListener) extends GraphicalView with ByteArrayEater w
   
   def point(s:Int) = {
     point = s
-    redraw
     loop
   }
   
   override def setData(b:Array[Byte]) : Unit = {
     data = b
-    redraw
     loop
   }
   
